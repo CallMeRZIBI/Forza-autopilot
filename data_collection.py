@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import mss
 import cv2
@@ -26,17 +27,30 @@ def get_key():
     presses = [keyboard.is_pressed('w'),keyboard.is_pressed('a'),keyboard.is_pressed('s'),keyboard.is_pressed('d')]
     return presses
 
-def save_data(images, keys):
+def save_data(images, keys, number):
     i = 0
     while i < len(keys):
-        cv2.imwrite("D:/projects/python scripts/ml/Forza_autopilot/collected_data/images/image{}.jpg".format(i), images[i])
+        path = "D:/projects/python scripts/ml/Forza_autopilot/collected_data/"
+        cv2.imwrite("{}collected_data{}/images/image{}.jpg".format(path,number,i), images[i])
 
         out = keys[i]
-        f = open("D:/projects/python scripts/ml/Forza_autopilot/collected_data/keys/key{}.txt".format(i), "w+")
+        f = open("{}collected_data{}/keys/key{}.txt".format(path,number,i), "w+")
         f.write("{},{},{},{}".format(int(out[0]==True),int(out[1]==True),int(out[2]==True),int(out[3]==True)))
         f.close()
         i+=1
 
+def create_paths(number):
+    path = "D:/projects/python scripts/ml/Forza_autopilot/collected_data/"
+    try:
+        os.makedirs("{}collected_data{}/keys".format(path, number))
+        os.makedirs("{}collected_data{}/images".format(path, number))
+    except OSError:
+        print("can't create directory")
+    else:
+        print("created directory")
+
+number_of_session = input("number of actual session: ")
+create_paths(int(number_of_session))
 time.sleep(10)
 while to_break == False:
     input_ = get_screen()
@@ -45,7 +59,7 @@ while to_break == False:
 
     inputs.append(input_)
     outputs.append(output_)
-save_data(inputs,outputs)
+save_data(inputs,outputs, int(number_of_session))
 
 # labeling https://www.analyticsvidhya.com/blog/2019/04/build-first-multi-label-image-classification-model-python/
 # or this https://datascience.stackexchange.com/questions/49094/how-to-transform-a-folder-of-images-into-csv-file
