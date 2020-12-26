@@ -30,20 +30,18 @@ def get_key():
 def save_data(images, keys, number):
     i = 0
     while i < len(keys):
-        path = "D:/projects/python scripts/ml/Forza_autopilot/collected_data/"
-        cv2.imwrite("{}collected_data{}/images/image{}.jpg".format(path,number,i), images[i])
+        cv2.imwrite("collected_data/collected_data{}/images/image{}.jpg".format(number,i), images[i])
 
         out = keys[i]
-        f = open("{}collected_data{}/keys/key{}.txt".format(path,number,i), "w+")
+        f = open("collected_data/collected_data{}/keys/key{}.txt".format(number,i), "w+")
         f.write("{},{},{},{}".format(int(out[0]==True),int(out[1]==True),int(out[2]==True),int(out[3]==True)))
         f.close()
         i+=1
 
 def create_paths(number):
-    path = "D:/projects/python scripts/ml/Forza_autopilot/collected_data/"
     try:
-        os.makedirs("{}collected_data{}/keys".format(path, number))
-        os.makedirs("{}collected_data{}/images".format(path, number))
+        os.makedirs("collected_data/collected_data{}/keys".format(number))
+        os.makedirs("collected_data/collected_data{}/images".format(number))
     except OSError:
         print("can't create directory")
     else:
