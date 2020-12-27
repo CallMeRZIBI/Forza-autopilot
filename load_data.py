@@ -25,7 +25,6 @@ def create_training_data():
         print(e)
 
 create_training_data()
-
 # Maybye shuffle training data
 random.shuffle(training_data)
 
