@@ -14,7 +14,7 @@ def create_training_data():
             labels_path = os.path.join(path, "keys")
             i = 0
             while i < len(os.listdir(img_path)):
-                image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)), )
+                image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)), cv2.IMREAD_GRAYSCALE)
                 f = open(os.path.join(labels_path,"key{}.txt".format(i)), "r")
                 f = f.read()
                 label = f.split(',')
@@ -36,14 +36,10 @@ Y = []
 for image, label in training_data:
     X.append(image)
     Y.append(label)
-X = np.array(X).reshape(-1, 144, 256,3)
+X = np.array(X).reshape(-1, 144, 256,1)
 Y = np.array(Y)
 
 # Saving data
-pickle_out = open("training_data/X.pickle","wb")
-pickle.dump(X, pickle_out)
-pickle_out.close()
+np.save("training_data/X.npy",X,allow_pickle=False)
 
-pickle_out = open("training_data/Y.pickle","wb")
-pickle.dump(Y, pickle_out)
-pickle_out.close()
+np.save("training_data/Y.npy",Y,allow_pickle=False)

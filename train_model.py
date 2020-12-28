@@ -1,16 +1,14 @@
-import pickle
 import tensorflow as tf
+import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
 from tensorflow.keras.callbacks import TensorBoard
 import time
 
 # Loading data
-pickle_in = open("training_data/X.pickle", "rb")
-X = pickle.load(pickle_in)
+X = np.load("training_data/X.npy")
 
-pickle_in = open("training_data/Y.pickle", "rb")
-Y = pickle.load(pickle_in)
+Y = np.load("training_data/Y.npy")
 
 X = X/255.0
 

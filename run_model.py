@@ -25,8 +25,8 @@ def get_screen():
     return printscreen
 
 def reshape(image):
-    image = cv2.cvtColor(image,cv2.COLOR_BGRA2RGB)
-    reshaped = image.reshape(-1, 144,256,3)
+    image = cv2.cvtColor(image,cv2.COLOR_BGRA2GRAY)
+    reshaped = image.reshape(-1, 144,256,1)
     return reshaped
 
 def move(keys):
