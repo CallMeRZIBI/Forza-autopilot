@@ -1,9 +1,53 @@
-"# Forza-autopilot" 
+# Forza autopilot
 
-Take this as some form of my continuing with the old forgotten Minecraft bot but just better XDD
+AI autopilot for Forza Horizon 4
 
-I'm making this for forza cause minecraft is lame on cars (forzas physics sometimes isn't the best but it's just better)
-I'm going to use TensorFlow instead of my own NN rewriten from Daniel Shiffman to c#,
-and all of this will be in Python and not in c# cause it's bot and not some hacks :DDDD
+## What it does?
 
-Also I got hugely inspired by Charles 2.0
+This autopilot drives as you learn it to drive, it's just a convolutional neural network so it probably won't avoid other vehicles... But who knows, maybye I'll change it ;)
+
+## Requirements
+
+Python 3
+Tensorflow
+Keras
+NumPy
+OpenCV-python
+mss
+keyboard
+
+direct inputs
+source to this solution and code:
+http://stackoverflow.com/questions/14489013/simulate-python-keypresses-for-controlling-a-game
+http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
+
+## Installation
+
+```bash
+git clone https://github.com/CallMeRZIBI/Forza-autopilot.git
+cd Forza_autopilot
+mkdir collected_data
+mkdir training_data
+```
+
+## Usage
+
+For collecting data:
+```bash
+py data_collection.py # then enter the number of actual session
+```
+
+For loading data to database:
+```bash
+py load_data.py
+```
+
+For training model:
+```bash
+py train_model.py
+```
+
+And lastly for running trained model:
+```bash
+py run_model.py
+```
