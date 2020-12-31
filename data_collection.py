@@ -58,6 +58,3 @@ while to_break == False:
     inputs.append(input_)
     outputs.append(output_)
 save_data(inputs,outputs, int(number_of_session))
-
-# labeling https://www.analyticsvidhya.com/blog/2019/04/build-first-multi-label-image-classification-model-python/
-# or this https://datascience.stackexchange.com/questions/49094/how-to-transform-a-folder-of-images-into-csv-file
