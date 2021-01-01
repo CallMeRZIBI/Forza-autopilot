@@ -49,21 +49,26 @@ def move(keys):
 
 model = tf.keras.models.load_model("model/64x3x1-CNN.model")
 
-time.sleep(10)
+time.sleep(2)
 print('starting')
 
+pause = False
 while to_break==False:
-    screen = get_screen()
-    image = reshape(screen)
-
-    prediction = model.predict([image])
-    print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
-    press = prediction[0]
-    move(press)
-
     if keyboard.is_pressed('o'):
-        keyboard.read_key('o')
+        pause = True
+        move([0,0,0,0])
+    if keyboard.is_pressed('i'):
+        pause = False
 
-    if keyboard.is_pressed('q'):
-        to_break = True
-        break
+    if pause == False:
+        screen = get_screen()
+        image = reshape(screen)
+
+        prediction = model.predict([image])
+        print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
+        press = prediction[0]
+        move(press)
+
+        if keyboard.is_pressed('q'):
+            to_break = True
+            break
