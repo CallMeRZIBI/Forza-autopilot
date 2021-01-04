@@ -6,8 +6,10 @@ import time
 import keyboard
 from directkeys import PressKey, ReleaseKey, W, A, S, D
 
-gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.2)
-sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpu_options))
+# Check if tensorflow-gpu is installed.
+if tf.test.gpu_device_name():
+    gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.2)
+    sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpu_options))
 
 monitor = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
 to_break = False
