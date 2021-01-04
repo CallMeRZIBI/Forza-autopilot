@@ -8,12 +8,12 @@ This autopilot drives as you learn it to drive, it's just a convolutional neural
 
 ## Requirements
 
- * Python 3\
- * Tensorflow\
- * Keras\
- * NumPy\
- * OpenCV-python\
- * mss\
+ * Python 3
+ * Tensorflow
+ * Keras
+ * NumPy
+ * OpenCV-python
+ * mss
  * keyboard
 
 direct inputs\
