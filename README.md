@@ -8,17 +8,16 @@ This autopilot drives as you learn it to drive, it's just a convolutional neural
 
 ## Requirements
 
-Python 3
-Tensorflow
-Keras
-NumPy
-OpenCV-python
-mss
-keyboard
+ * Python 3\
+ * Tensorflow\
+ * Keras\
+ * NumPy\
+ * OpenCV-python\
+ * mss\
+ * keyboard
 
-direct inputs
-source to this solution and code:
-http://stackoverflow.com/questions/14489013/simulate-python-keypresses-for-controlling-a-game
+direct inputs\
+source to this solution and code: http://stackoverflow.com/questions/14489013/simulate-python-keypresses-for-controlling-a-game\
 http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
 
 ## Installation
