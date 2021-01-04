@@ -6,9 +6,10 @@ from tensorflow.keras.callbacks import TensorBoard
 import time
 
 # Loading data
-X = np.load("training_data/X.npy")
+data = np.load("training_data/data.npz")
+X = data['arr_0']
 
-Y = np.load("training_data/Y.npy")
+Y = data['arr_1']
 
 X = X/255.0
 
@@ -54,4 +55,4 @@ for dense_layer in dense_layers:
 
             model.fit(X,Y, batch_size=64,epochs=20, validation_split=0.1, callbacks=[tensorboard])
 
-model.save("model/64x3x1-CNN.model")
+model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))

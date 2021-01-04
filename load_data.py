@@ -39,6 +39,4 @@ X = np.array(X).reshape(-1, 144, 256,1)
 Y = np.array(Y)
 
 # Saving data
-np.save("training_data/X.npy",X,allow_pickle=False)
-
-np.save("training_data/Y.npy",Y,allow_pickle=False)
+np.savez_compressed("training_data/data.npz",X,Y)
