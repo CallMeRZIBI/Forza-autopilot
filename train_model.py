@@ -53,6 +53,9 @@ for dense_layer in dense_layers:
             optimizer="adam",
             metrics=['accuracy'])
 
+            prev_time = time.time()
+
             model.fit(X,Y, batch_size=64,epochs=20, validation_split=0.1, callbacks=[tensorboard])
+            print("Training took: {}".format(int(time.time() - prev_time)))
 
 model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))
