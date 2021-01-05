@@ -7,7 +7,7 @@ import keyboard
 from directkeys import PressKey, ReleaseKey, W, A, S, D
 
 # Check if tensorflow-gpu is installed.
-if tf.test.gpu_device_name():
+if tf.config.list_physical_devices('GPU'):
     gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.2)
     sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpu_options))
 
