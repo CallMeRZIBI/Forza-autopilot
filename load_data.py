@@ -7,10 +7,13 @@ training_data = []
 
 def create_training_data():
     try:
+        actual_file = 0
         for files in os.listdir("collected_data"):
             path = os.path.join("collected_data", files)
             img_path = os.path.join(path, "images")
             labels_path = os.path.join(path, "keys")
+
+            actual_file += 1
             i = 0
             while i < len(os.listdir(img_path)):
                 image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)), cv2.IMREAD_GRAYSCALE)
@@ -20,6 +23,8 @@ def create_training_data():
                 label = [int(label[0]), int(label[1]),int(label[2]), int(label[3])]
                 training_data.append([image,label])
                 i+=1
+                
+                print("Loaded: {} out of {}, {} folder".format(i,len(os.listdir(img_path)),actual_file,len(files)))
     except Exception as e:
         print(e)
 
