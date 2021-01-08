@@ -51,7 +51,7 @@ def move(keys):
 
 model = tf.keras.models.load_model("model/64x3x1-CNN.model")
 
-time.sleep(2)
+time.sleep(10)
 print('starting')
 
 pause = False
