@@ -30,14 +30,6 @@ def get_key():
     presses = [keyboard.is_pressed('w'),keyboard.is_pressed('a'),keyboard.is_pressed('s'),keyboard.is_pressed('d')]
     return presses
 
-def detect_objects(image):
-    image = cv2.cvtColor(image,cv2.COLOR_RGBA2RGB)
-    rows = image.shape[0]
-    cols = image.shape[1]
-    cvNet.setInput(cv2.dnn.blobFromImage(image, size=(256,144),swapRB=True,crop=False))
-    cvOut = cvNet.forward()
-    return cvOut
-
 def save_data(images, keys, number):
     i = 0
     while i < len(keys):
@@ -61,7 +53,6 @@ def create_paths(number):
 number_of_session = input("number of actual session: ")
 create_paths(int(number_of_session))
 
-cvNet = cv2.dnn.readNetFromTensorflow('opencv_model/frozen_inference_graph.pb', 'opencv_model/model.pbtxt')
 d = d3dshot.create()
 time.sleep(10)
 
@@ -69,7 +60,6 @@ while to_break == False:
     input_ = get_screen(d)
     output_ = get_key()
     print(output_)
-    objects = detect_objects(input_)
 
     inputs.append(input_)
     outputs.append(output_)

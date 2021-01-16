@@ -11,6 +11,8 @@ X = data['arr_0']
 
 Y = data['arr_1']
 
+Z = data['arr_2']
+
 X = X/255.0
 
 #--------------Optimalization-------------

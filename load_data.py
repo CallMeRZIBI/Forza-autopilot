@@ -4,6 +4,13 @@ import cv2
 import random
 
 training_data = []
+cvNet = cv2.dnn.readNetFromTensorflow('opencv_model/frozen_inference_graph.pb', 'opencv_model/model.pbtxt')
+
+def detect_objects(image):
+    image = cv2.cvtColor(image,cv2.COLOR_RGBA2RGB)
+    cvNet.setInput(cv2.dnn.blobFromImage(image, size=(256,144),swapRB=True,crop=False))
+    cvOut = cvNet.forward()
+    return cvOut
 
 def create_training_data():
     try:
@@ -16,12 +23,15 @@ def create_training_data():
             actual_file += 1
             i = 0
             while i < len(os.listdir(img_path)):
-                image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)), cv2.IMREAD_GRAYSCALE)
+                image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)))
+                objects = detect_objects(image)
+
+                gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
                 f = open(os.path.join(labels_path,"key{}.txt".format(i)), "r")
                 f = f.read()
                 label = f.split(',')
                 label = [int(label[0]), int(label[1]),int(label[2]), int(label[3])]
-                training_data.append([image,label])
+                training_data.append([gray_image,label,objects])
                 i+=1
                 
                 print("Loaded: {} out of {}, {} folder".format(i,len(os.listdir(img_path)),actual_file,len(files)))
@@ -36,12 +46,15 @@ random.shuffle(training_data)
 
 X = []
 Y = []
+Z = []
 
-for image, label in training_data:
+for image, label, objects in training_data:
     X.append(image)
     Y.append(label)
+    Z.append(objects)
 X = np.array(X).reshape(-1, 144, 256,1)
 Y = np.array(Y)
+Z = np.array(Z)
 
 # Saving data
-np.savez_compressed("training_data/data.npz",X,Y)
+np.savez_compressed("training_data/data.npz",X,Y,Z)
