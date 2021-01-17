@@ -94,9 +94,9 @@ for dense_layer in dense_layers:
 
             prev_time = time.time()
 
-            mergedModel.fit([X,Y],Z,batch_size=64,epochs=20,validation_split=0.1)
+            mergedModel.fit([X,Y],Z,batch_size=64,epochs=20,validation_split=0.1, callbacks=[tensorboard])
             #model.fit(X,Y, batch_size=64,epochs=20, validation_split=0.1, callbacks=[tensorboard])
             print("Training took: {}".format(int(time.time() - prev_time)))
-            mergedModel.save("model/64x3x1-CNN-object-detection.model")
+            mergedModel.save("model/64x3x1-CNN.model")
 
-model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))
+#model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))
