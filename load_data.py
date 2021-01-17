@@ -23,15 +23,24 @@ def create_training_data():
             actual_file += 1
             i = 0
             while i < len(os.listdir(img_path)):
+                detected = []
                 image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)))
                 objects = detect_objects(image)
+                for detection in objects[0,0,:,:]:
+                    score = float(detection[2])
+                    if score > 0.4:
+                        left = detection[3] * image.shape[1]
+                        top = detection[4] * image.shape[0]
+                        width = (detection [5] * image.shape[1]) - left
+                        height = (detection[6] * image.shape[0]) - top
+                        detected.append([left, top, width, height])
 
                 gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
                 f = open(os.path.join(labels_path,"key{}.txt".format(i)), "r")
                 f = f.read()
                 label = f.split(',')
                 label = [int(label[0]), int(label[1]),int(label[2]), int(label[3])]
-                training_data.append([gray_image,label,objects])
+                training_data.append([gray_image,label,detected])
                 i+=1
                 
                 print("Loaded: {} out of {}, {} folder".format(i,len(os.listdir(img_path)),actual_file,len(files)))
@@ -48,13 +57,14 @@ X = []
 Y = []
 Z = []
 
-for image, label, objects in training_data:
+for image, label, detected in training_data:
     X.append(image)
     Y.append(label)
-    Z.append(objects)
+    Z.append(detected)
+
 X = np.array(X).reshape(-1, 144, 256,1)
 Y = np.array(Y)
-Z = np.array(Z)
+Z = np.array(Z, dtype=object)
 
 # Saving data
 np.savez_compressed("training_data/data.npz",X,Y,Z)

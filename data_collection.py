@@ -9,7 +9,6 @@ import psutil
 p = psutil.Process(os.getpid())
 p.nice(psutil.HIGH_PRIORITY_CLASS)
 
-monitor = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
 to_break = False
 
 inputs = []
@@ -19,6 +18,7 @@ def get_screen(d3d):
     global to_break
     image = np.array(d3d.screenshot())
     image = cv2.resize(image,(256,144))
+    image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
     cv2.imshow('window', image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
