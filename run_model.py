@@ -40,6 +40,7 @@ def detect_objects(image):
 def get_objects(objects):
     # This is awful, later on don't make max detections but differently sized arrays
     # Adding bounding box to array of detected objects
+    detected = []
     max_detections = 5
     actual_detection = 0
     for detection in objects[0,0,:,:]:
@@ -52,6 +53,7 @@ def get_objects(objects):
             detected.append([left, top, right, bottom])
             actual_detection+=1
         if actual_detection == max_detections:
+            return detected
             break
 
     # When 5 things aren't detected then it will fill the rest with zeroes
@@ -106,7 +108,7 @@ while to_break==False:
         objects = detect_objects(image)
         detected = get_objects(objects)
 
-        prediction = model.predict([image,detected])
+        prediction = model([image,detected[np.newaxis,:,:]])
         print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
         press = prediction[0]
         move(press)

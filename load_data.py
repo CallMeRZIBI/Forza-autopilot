@@ -16,6 +16,7 @@ def detect_objects(image):
 def get_objects(objects):
     # This is awful, later on don't make max detections but differently sized arrays
     # Adding bounding box to array of detected objects
+    detected = []
     max_detections = 5
     actual_detection = 0
     for detection in objects[0,0,:,:]:
@@ -48,7 +49,6 @@ def create_training_data():
             actual_file += 1
             i = 0
             while i < len(os.listdir(img_path)):
-                detected = []
                 image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)))
                 objects = detect_objects(image)
 

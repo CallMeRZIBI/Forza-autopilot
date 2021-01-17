@@ -60,6 +60,8 @@ for dense_layer in dense_layers:
             optimizer="adam",
             metrics=['accuracy'])
 
+#----------------------------FIX--------------------------------------
+
             # Model for object processing
             # Inputs
             model2.add(Input(shape=(5,4)))
