@@ -86,7 +86,5 @@ X = np.array(X).reshape(-1, 144, 256,1)
 Y = np.array(Y)
 Z = np.array(Z)
 
-print(Z)
-
 # Saving data
 np.savez_compressed("training_data/data.npz",X,Y,Z)

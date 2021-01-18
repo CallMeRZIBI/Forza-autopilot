@@ -68,6 +68,7 @@ for dense_layer in dense_layers:
             # Hidden layer
             model2.add(Dense(8))
             model2.add(Activation('relu'))
+            model2.add(Flatten())
             # Outputs
             model2.add(Dense(4))
             model2.add(Activation('sigmoid'))
