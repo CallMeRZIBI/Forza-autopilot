@@ -13,7 +13,7 @@ def detect_objects(image):
     cvOut = cvNet.forward()
     return cvOut
 
-def get_objects(objects):
+def get_objects(objects,image):
     # This is awful, later on don't make max detections but differently sized arrays
     # Adding bounding box to array of detected objects
     detected = []
@@ -22,10 +22,10 @@ def get_objects(objects):
     for detection in objects[0,0,:,:]:
         score = float(detection[2])
         if score > 0.4:
-            left = int(detection[3] * image.shape[1])
-            top = int(detection[4] * image.shape[0])
-            right = int(detection[5] * image.shape[1])
-            bottom = int(detection[6] * image.shape[0])
+            left = int(detection[3] * image.shape[1]) if int(detection[3] * image.shape[1]) >= 0 else 0
+            top = int(detection[4] * image.shape[0]) if int(detection[4] * image.shape[0]) >=0 else 0
+            right = int(detection[5] * image.shape[1]) if int(detection[5] * image.shape[1]) >=0 else 0
+            bottom = int(detection[6] * image.shape[0]) if int(detection[6] * image.shape[0]) >= 0 else 0
             detected.append([left, top, right, bottom])
             actual_detection+=1
         if actual_detection == max_detections:
@@ -52,7 +52,7 @@ def create_training_data():
                 image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)))
                 objects = detect_objects(image)
 
-                detected = get_objects(objects)
+                detected = get_objects(objects, image)
 
                 gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
                 f = open(os.path.join(labels_path,"key{}.txt".format(i)), "r")
