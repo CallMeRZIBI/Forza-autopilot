@@ -29,6 +29,10 @@ def get_screen(d3d):
 
 def reshape(image):
     image = cv2.cvtColor(image,cv2.COLOR_RGBA2GRAY)
+    cv2.imshow('img',image)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
+        keyboard.unhook_all()
     reshaped = image.reshape(-1, 144,256,1)
     return reshaped
 
@@ -40,15 +44,15 @@ def detect_objects(image):
 
 def get_objects(objects,image):
     # Adding bounding box to array of detected objects
-    detected = []
     for detection in objects[0,0,:,:]:
-        score = float(detection[2])
-        if score > 0.4:
-            left = int(detection[3] * image.shape[1])
-            top = int(detection[4] * image.shape[0])
-            right = int(detection[5] * image.shape[1])
-            bottom = int(detection[6] * image.shape[0])
-            cv2.rectangle(image,(left,top,right,bottom), (23,230,210), thickness=1)
+        if detection[1] >=2 and detection[1] <= 9:
+            score = float(detection[2])
+            if score > 0.4:
+                left = int(detection[3] * image.shape[1])
+                top = int(detection[4] * image.shape[0])
+                right = int(detection[5] * image.shape[1])
+                bottom = int(detection[6] * image.shape[0])
+                cv2.rectangle(image,(left,top,right,bottom), (0,0,0), thickness=1)
 
     return image
 
@@ -73,7 +77,7 @@ def move(keys):
 model = tf.keras.models.load_model("model/64x3x1-CNN.model")
 d = d3dshot.create()
 
-time.sleep(2)
+time.sleep(10)
 print('starting')
 
 pause = False

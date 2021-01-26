@@ -17,19 +17,20 @@ def get_objects(objects,image):
     # Adding bounding box to array of detected objects
     detected = []
     for detection in objects[0,0,:,:]:
-        score = float(detection[2])
-        if score > 0.4:
-            left = int(detection[3] * image.shape[1])
-            top = int(detection[4] * image.shape[0])
-            right = int(detection[5] * image.shape[1])
-            bottom = int(detection[6] * image.shape[0])
-            detected.append([left, top, right, bottom])
+        if detection[1] >=2 and detection[1] <= 9:
+            score = float(detection[2])
+            if score > 0.4:
+                left = int(detection[3] * image.shape[1])
+                top = int(detection[4] * image.shape[0])
+                right = int(detection[5] * image.shape[1])
+                bottom = int(detection[6] * image.shape[0])
+                detected.append([left, top, right, bottom])
 
     return detected
 
 def draw_boxes(image, coords):
     for detection in coords:
-        cv2.rectangle(image,(detection[0],detection[1],detection[2],detection[3]), (23,230,210), thickness=1)
+        cv2.rectangle(image,(detection[0],detection[1],detection[2],detection[3]), (0,0,0), thickness=1)
 
     return image
 
