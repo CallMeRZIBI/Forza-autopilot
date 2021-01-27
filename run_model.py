@@ -29,10 +29,10 @@ def get_screen(d3d):
 
 def reshape(image):
     image = cv2.cvtColor(image,cv2.COLOR_RGBA2GRAY)
-    cv2.imshow('img',image)
+    '''cv2.imshow('img',image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
-        keyboard.unhook_all()
+        keyboard.unhook_all()'''
     reshaped = image.reshape(-1, 144,256,1)
     return reshaped
 
@@ -103,7 +103,7 @@ while to_break==False:
         prediction = model.predict([gray])
         print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
         press = prediction[0]
-        #move(press)
+        move(press)
 
 
 

@@ -22,7 +22,6 @@ def get_screen(d3d):
     cv2.imshow('window', image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
-        keyboard.unhook_all()
         to_break = True
     return image
 
