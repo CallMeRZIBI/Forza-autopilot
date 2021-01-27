@@ -22,8 +22,8 @@ def get_objects(objects,image):
             if score > 0.4:
                 left = int(detection[3] * image.shape[1])
                 top = int(detection[4] * image.shape[0])
-                right = int(detection[5] * image.shape[1])
-                bottom = int(detection[6] * image.shape[0])
+                right = int(detection[5] * image.shape[1]) - left
+                bottom = int(detection[6] * image.shape[0]) - top
                 detected.append([left, top, right, bottom])
 
     return detected

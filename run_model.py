@@ -50,8 +50,8 @@ def get_objects(objects,image):
             if score > 0.4:
                 left = int(detection[3] * image.shape[1])
                 top = int(detection[4] * image.shape[0])
-                right = int(detection[5] * image.shape[1])
-                bottom = int(detection[6] * image.shape[0])
+                right = int(detection[5] * image.shape[1]) - left
+                bottom = int(detection[6] * image.shape[0]) - top
                 cv2.rectangle(image,(left,top,right,bottom), (0,0,0), thickness=1)
 
     return image
@@ -103,7 +103,7 @@ while to_break==False:
         prediction = model.predict([gray])
         print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
         press = prediction[0]
-        move(press)
+        #move(press)
 
 
 
