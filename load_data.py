@@ -3,6 +3,7 @@ import os
 import cv2
 import random
 import tensorflow as tf
+import gc
 
 training_data = []
 cvNet = cv2.dnn.readNetFromTensorflow('opencv_model/frozen_inference_graph.pb', 'opencv_model/model.pbtxt')
@@ -57,8 +58,12 @@ def create_training_data():
                 f = f.read()
                 label = f.split(',')
                 label = [int(label[0]), int(label[1]),int(label[2]), int(label[3])]
-
+                
+                # Turning off garbage collector
+                gc.disable()
                 training_data.append([gray_image,label])
+                gc.enable()
+                
                 i+=1
                 
                 print("Loaded: {} out of {}, {} folder".format(i,len(os.listdir(img_path)),actual_file,len(files)))
