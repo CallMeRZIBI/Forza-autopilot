@@ -30,7 +30,7 @@ def get_objects(objects,image):
 
 def draw_boxes(image, coords):
     for detection in coords:
-        cv2.rectangle(image,(detection[0],detection[1],detection[2],detection[3]), (0,0,0), thickness=1)
+        cv2.rectangle(image,(detection[0],detection[1],detection[2],detection[3]), (0,0,0), thickness=3)
 
     return image
 

@@ -15,11 +15,6 @@ cvNet = cv2.dnn.readNetFromTensorflow('opencv_model/frozen_inference_graph.pb', 
 
 to_break = False
 
-pressedW = False
-pressedA=False
-pressedS=False
-pressedD=False
-
 def get_screen(d3d):
     global to_break
     image = np.array(d3d.screenshot())
@@ -31,8 +26,7 @@ def reshape(image):
     image = cv2.cvtColor(image,cv2.COLOR_RGBA2GRAY)
     '''cv2.imshow('img',image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
-        keyboard.unhook_all()'''
+        cv2.destroyAllWindows()'''
     reshaped = image.reshape(-1, 144,256,1)
     return reshaped
 
@@ -52,7 +46,7 @@ def get_objects(objects,image):
                 top = int(detection[4] * image.shape[0])
                 right = int(detection[5] * image.shape[1]) - left
                 bottom = int(detection[6] * image.shape[0]) - top
-                cv2.rectangle(image,(left,top,right,bottom), (0,0,0), thickness=1)
+                cv2.rectangle(image,(left,top,right,bottom), (0,0,0), thickness=3)
 
     return image
 
