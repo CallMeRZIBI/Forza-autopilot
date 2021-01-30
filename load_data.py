@@ -47,6 +47,9 @@ def create_training_data():
             i = 0
             while i < len(os.listdir(img_path)):
                 image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)))
+
+                # Turning off garbage collector
+                gc.disable()
                 objects = detect_objects(image)
 
                 detected = get_objects(objects, image)
@@ -59,8 +62,6 @@ def create_training_data():
                 label = f.split(',')
                 label = [int(label[0]), int(label[1]),int(label[2]), int(label[3])]
                 
-                # Turning off garbage collector
-                gc.disable()
                 training_data.append([gray_image,label])
                 gc.enable()
                 
@@ -99,6 +100,7 @@ import os
 import cv2
 import random
 import tensorflow as tf
+import gc
 
 training_data = []
 cvNet = cv2.dnn.readNetFromTensorflow('opencv_model/frozen_inference_graph.pb', 'opencv_model/model.pbtxt')
@@ -110,29 +112,53 @@ def detect_objects(image):
     return cvOut
 
 def get_objects(objects,image):
+    # Adding bounding box to array of detected objects
+    detected = []
+    for detection in objects[0,0,:,:]:
+        if detection[1] >=2 and detection[1] <= 9:
+            score = float(detection[2])
+            if score > 0.4:
+                left = int(detection[3] * image.shape[1])
+                top = int(detection[4] * image.shape[0])
+                right = int(detection[5] * image.shape[1]) - left
+                bottom = int(detection[6] * image.shape[0]) - top
+                detected.append([left, top, right, bottom])
+
+    return detected
+
+# Later remove the first one or this
+def get_five_objects(objects,image):
     # This is awful, later on don't make max detections but differently sized arrays
     # Adding bounding box to array of detected objects
     detected = []
-    max_detections = 3
+    max_detections = 5
     actual_detection = 0
     for detection in objects[0,0,:,:]:
-        score = float(detection[2])
-        if score > 0.4:
-            left = int(detection[3] * image.shape[1]) if int(detection[3] * image.shape[1]) >= 0 else 0
-            top = int(detection[4] * image.shape[0]) if int(detection[4] * image.shape[0]) >=0 else 0
-            right = int(detection[5] * image.shape[1]) if int(detection[5] * image.shape[1]) >=0 else 0
-            bottom = int(detection[6] * image.shape[0]) if int(detection[6] * image.shape[0]) >= 0 else 0
-            detected.append([left, top, right, bottom])
-            actual_detection+=1
-        if actual_detection == max_detections:
-            break
+        if detection[1] >=2 and detection[1] <= 9:
+            score = float(detection[2])
+            if score > 0.4:
+                left = int(detection[3] * image.shape[1])
+                top = int(detection[4] * image.shape[0])
+                right = int(detection[5] * image.shape[1]) - left
+                bottom = int(detection[6] * image.shape[0]) - top
+                detected.append([left, top, right, bottom])
+                actual_detection+=1
+            if actual_detection == max_detections:
+                break
 
-    # When 5 things aren't detected then it will fill the rest with zeroes
+    # When max_detection things aren't detected then it will fill the rest with zeroes
     while actual_detection < max_detections:
-        detected.append([None,None,None,None])
+        detected.append([0,0,0,0])
         actual_detection+=1
     detected = np.array(detected)
+    detected = detected.flatten()
     return detected
+
+def draw_boxes(image, coords):
+    for detection in coords:
+        cv2.rectangle(image,(detection[0],detection[1],detection[2],detection[3]), (0,0,0), thickness=3)
+
+    return image
 
 def create_training_data():
     try:
@@ -146,17 +172,26 @@ def create_training_data():
             i = 0
             while i < len(os.listdir(img_path)):
                 image = cv2.imread(os.path.join(img_path,"image{}.jpg".format(i)))
+
+                # Turning off garbage collector
+                gc.disable()
                 objects = detect_objects(image)
 
                 detected = get_objects(objects, image)
 
-                gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+                append_detected = get_five_objects(objects,image)
+
+                img = draw_boxes(image, detected)
+
+                gray_image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
                 f = open(os.path.join(labels_path,"key{}.txt".format(i)), "r")
                 f = f.read()
                 label = f.split(',')
                 label = [int(label[0]), int(label[1]),int(label[2]), int(label[3])]
-
-                training_data.append([gray_image,label,detected])
+                
+                training_data.append([gray_image,label,append_detected])
+                gc.enable()
+                
                 i+=1
                 
                 print("Loaded: {} out of {}, {} folder".format(i,len(os.listdir(img_path)),actual_file,len(files)))
@@ -173,10 +208,10 @@ X = []
 Y = []
 Z = []
 
-for image, label, detected in training_data:
+for image, label, objects in training_data:
     X.append(image)
     Y.append(label)
-    Z.append(detected)
+    Z.append(objects)
 
 X = np.array(X).reshape(-1, 144, 256,1)
 Y = np.array(Y)
