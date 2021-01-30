@@ -111,21 +111,6 @@ def detect_objects(image):
     cvOut = cvNet.forward()
     return cvOut
 
-def get_objects(objects,image):
-    # Adding bounding box to array of detected objects
-    detected = []
-    for detection in objects[0,0,:,:]:
-        if detection[1] >=2 and detection[1] <= 9:
-            score = float(detection[2])
-            if score > 0.4:
-                left = int(detection[3] * image.shape[1])
-                top = int(detection[4] * image.shape[0])
-                right = int(detection[5] * image.shape[1]) - left
-                bottom = int(detection[6] * image.shape[0]) - top
-                detected.append([left, top, right, bottom])
-
-    return detected
-
 # Later remove the first one or this
 def get_five_objects(objects,image):
     # This is awful, later on don't make max detections but differently sized arrays
@@ -154,12 +139,6 @@ def get_five_objects(objects,image):
     detected = detected.flatten()
     return detected
 
-def draw_boxes(image, coords):
-    for detection in coords:
-        cv2.rectangle(image,(detection[0],detection[1],detection[2],detection[3]), (0,0,0), thickness=3)
-
-    return image
-
 def create_training_data():
     try:
         actual_file = 0
@@ -177,13 +156,9 @@ def create_training_data():
                 gc.disable()
                 objects = detect_objects(image)
 
-                detected = get_objects(objects, image)
-
                 append_detected = get_five_objects(objects,image)
 
-                img = draw_boxes(image, detected)
-
-                gray_image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+                gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
                 f = open(os.path.join(labels_path,"key{}.txt".format(i)), "r")
                 f = f.read()
                 label = f.split(',')
