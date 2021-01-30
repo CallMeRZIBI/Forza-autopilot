@@ -24,9 +24,9 @@ def get_screen(d3d):
 
 def reshape(image):
     image = cv2.cvtColor(image,cv2.COLOR_RGBA2GRAY)
-    '''cv2.imshow('img',image)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()'''
+    #cv2.imshow('img',image)
+    #if cv2.waitKey(1) & 0xFF == ord('q'):
+    #    cv2.destroyAllWindows()
     reshaped = image.reshape(-1, 144,256,1)
     return reshaped
 
@@ -120,11 +120,6 @@ if tf.config.list_physical_devices('GPU'):
 cvNet = cv2.dnn.readNetFromTensorflow('opencv_model/frozen_inference_graph.pb', 'opencv_model/model.pbtxt')
 to_break = False
 
-pressedW = False
-pressedA=False
-pressedS=False
-pressedD=False
-
 def get_screen(d3d):
     global to_break
     image = np.array(d3d.screenshot())
@@ -147,15 +142,15 @@ def get_objects(objects, image):
     # This is awful, later on don't make max detections but differently sized arrays
     # Adding bounding box to array of detected objects
     detected = []
-    max_detections = 3
+    max_detections = 5
     actual_detection = 0
     for detection in objects[0,0,:,:]:
         score = float(detection[2])
         if score > 0.4:
             left = int(detection[3] * image.shape[1])
             top = int(detection[4] * image.shape[0])
-            right = int(detection[5] * image.shape[1])
-            bottom = int(detection[6] * image.shape[0])
+            right = int(detection[5] * image.shape[1]) - left
+            bottom = int(detection[6] * image.shape[0]) - top
             detected.append([left, top, right, bottom])
             actual_detection+=1
         if actual_detection == max_detections:
@@ -164,9 +159,10 @@ def get_objects(objects, image):
 
     # When 5 things aren't detected then it will fill the rest with zeroes
     while actual_detection < max_detections:
-        detected.append([int(0),int(0),int(0),int(0)])
+        detected.append([0,0,0,0])
         actual_detection+=1
     detected = np.array(detected)
+    detected = detected.flatten()
     return detected
 
 def move(keys):
@@ -214,7 +210,7 @@ while to_break==False:
         objects = detect_objects(image)
         detected = get_objects(objects, image)
 
-        prediction = model([image,detected[np.newaxis,:,:]])
+        prediction = model([image,detected[np.newaxis,:]])
         print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
         press = prediction[0]
         move(press)'''
