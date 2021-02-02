@@ -1,4 +1,4 @@
-import tensorflow as tf
+'''import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from tensorflow.keras.models import Sequential
@@ -63,14 +63,14 @@ for dense_layer in dense_layers:
             model.fit(X,Y, batch_size=64,epochs=20, validation_split=0.1, callbacks=[tensorboard])
             print("Training took: {}".format(int(time.time() - prev_time)))
 
-model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))
+model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))'''
 
 
 
 
 
 #------------------neural network with two networks added together-----------------------
-'''import tensorflow as tf
+import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from tensorflow.keras.models import Sequential
@@ -87,6 +87,8 @@ Y = data['arr_2']
 Z = data['arr_1']
 
 X = X/255.0
+
+Y = Y/255.0
 
 #--------------Optimization--------------
 dense_layers = [1]
@@ -136,14 +138,22 @@ for dense_layer in dense_layers:
 
             # Model for object processing
             # Inputs
-            model2.add(Input(shape=(3,4)))
-            # Hidden layer
-            model2.add(Dense(8))
-            model2.add(Activation('relu'))
+            model2.add(Conv2D(64,(3,3),input_shape = Y.shape[1:]))
+            model2.add(Activation("relu"))
+            model2.add(MaxPooling2D(pool_size=(2,2)))
+
+            model2.add(Conv2D(64,(3,3)))
+            model2.add(Activation("relu"))
+            model2.add(MaxPooling2D(pool_size=(2,2)))
+            model2.add(Conv2D(64,(3,3)))
+            model2.add(Activation("relu"))
+            model2.add(MaxPooling2D(pool_size=(2,2)))
             model2.add(Flatten())
-            model2.add(Dense(8))
+
+            model2.add(Dense(64))
             model2.add(Activation('relu'))
-            # Outputs
+            model2.add(Dropout(0.2))
+
             model2.add(Dense(4))
             model2.add(Activation('sigmoid'))
 
@@ -155,9 +165,7 @@ for dense_layer in dense_layers:
             mergedOut = keras.layers.Add()([model.output,model2.output])
             mergedOut = Flatten()(mergedOut)
             mergedOut = Dense(64,activation='relu')(mergedOut)
-            mergedOut = Dropout(.2)(mergedOut)
             mergedOut = Dense(64, activation='relu')(mergedOut)
-            mergedOut = Dropout(.1)(mergedOut)
 
             # Output layer
             mergedOut = Dense(4,activation='softmax')(mergedOut)
@@ -176,4 +184,4 @@ for dense_layer in dense_layers:
             print("Training took: {}".format(int(time.time() - prev_time)))
             mergedModel.save("model/64x3x1-CNN.model")
 
-#model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))'''
+#model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))

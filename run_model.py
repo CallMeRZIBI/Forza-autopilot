@@ -1,4 +1,4 @@
-import cv2 
+'''import cv2 
 import d3dshot
 import tensorflow as tf
 import numpy as np
@@ -97,14 +97,14 @@ while to_break==False:
         prediction = model.predict([gray])
         print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
         press = prediction[0]
-        move(press)
+        move(press)'''
 
 
 
 
 
 #----------------running model with multiple networks added together-----------------------------
-'''import cv2 
+import cv2 
 import d3dshot
 import tensorflow as tf
 import numpy as np
@@ -139,11 +139,7 @@ def detect_objects(image):
     return cvOut
 
 def get_objects(objects, image):
-    # This is awful, later on don't make max detections but differently sized arrays
-    # Adding bounding box to array of detected objects
     detected = []
-    max_detections = 5
-    actual_detection = 0
     for detection in objects[0,0,:,:]:
         score = float(detection[2])
         if score > 0.4:
@@ -152,18 +148,16 @@ def get_objects(objects, image):
             right = int(detection[5] * image.shape[1]) - left
             bottom = int(detection[6] * image.shape[0]) - top
             detected.append([left, top, right, bottom])
-            actual_detection+=1
-        if actual_detection == max_detections:
-            return detected
-            break
-
-    # When 5 things aren't detected then it will fill the rest with zeroes
-    while actual_detection < max_detections:
-        detected.append([0,0,0,0])
-        actual_detection+=1
-    detected = np.array(detected)
-    detected = detected.flatten()
+    
     return detected
+
+def draw_boxes(coords):
+    image = np.zeros((144,256,1), np.uint8)
+    for detection in coords:
+        cv2.rectangle(image,(detection[0],detection[1],detection[2],detection[3]), (255), thickness=10)
+    image = cv2.resize(image,(64,36))
+    image = image.reshape(-1,36,64,1)
+    return image
 
 def move(keys):
     if keys[0] == 0:
@@ -209,8 +203,9 @@ while to_break==False:
         # Getting objects
         objects = detect_objects(image)
         detected = get_objects(objects, image)
+        boxes_im = draw_boxes(detected)
 
-        prediction = model([image,detected[np.newaxis,:]])
+        prediction = model([image,boxes_im])
         print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))
         press = prediction[0]
-        move(press)'''
+        move(press)
