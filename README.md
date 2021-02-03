@@ -4,7 +4,7 @@ AI autopilot for Forza Horizon 4
 
 ## What it does?
 
-This autopilot drives as you learn it to drive, it's just a convolutional neural network so it probably won't avoid other vehicles... But! I'm currently adding object detection to the whole thing so maybye it will work ;)
+This autopilot drives as you learn it to drive, it's just a convolutional neural network so it probably won't avoid other vehicles... But! It's also detecting cars, but I didn't test it yet. ;)
 
 ## Requirements
 
@@ -38,7 +38,7 @@ py data_collection.py # then enter the number of actual session
 
 For loading data to database:
 ```bash
-py load_data.py
+py load_data.py # this can take a while
 ```
 
 For training model:
