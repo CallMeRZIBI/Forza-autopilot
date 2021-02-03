@@ -160,22 +160,22 @@ def draw_boxes(coords):
     return image
 
 def move(keys):
-    if keys[0] == 0:
-        ReleaseKey(W)
-    else:
+    if keys[0] >= 0.8:
         PressKey(W)
-    if keys[1] == 0:
-        ReleaseKey(A)
     else:
+        ReleaseKey(W)
+    if keys[1] >= 0.8:
         PressKey(A)
-    if keys[2] == 0:
-        ReleaseKey(S)
     else:
+        ReleaseKey(A)
+    if keys[2] >= 0.8:
         PressKey(S)
-    if keys[3] == 0:
-        ReleaseKey(D)
     else:
+        ReleaseKey(S)
+    if keys[3] >= 0.8:
         PressKey(D)
+    else:
+        ReleaseKey(D)
 
 model = tf.keras.models.load_model("model/64x3x1-CNN.model")
 d = d3dshot.create()
@@ -204,6 +204,9 @@ while to_break==False:
         objects = detect_objects(image)
         detected = get_objects(objects, image)
         boxes_im = draw_boxes(detected)
+
+        image = image / 255.0
+        boxes_im = boxes_im / 255.0
 
         prediction = model([image,boxes_im])
         print("Forward-{} Left-{} Backward-{} Right-{}".format(prediction[0][0],prediction[0][1],prediction[0][2],prediction[0][3]))

@@ -73,9 +73,10 @@ model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D, Input
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D, Input, Concatenate
 from tensorflow.keras.callbacks import TensorBoard
+from keras.layers.merge import concatenate
 import time
 
 # Loading data
@@ -95,12 +96,6 @@ dense_layers = [1]
 layer_sizes = [64]
 conv_layers = [3]
 
-# Creating model for image processing
-model = Sequential()
-
-# Creating model for object processing
-model2 = Sequential()
-
 for dense_layer in dense_layers:
     for layer_size in layer_sizes:
         for conv_layer in conv_layers:
@@ -111,77 +106,65 @@ for dense_layer in dense_layers:
 
             # Model for image processing
             # First layer
-            model.add(Conv2D(layer_size, (3,3), input_shape = X.shape[1:]))
-            model.add(Activation("relu"))
-            model.add(MaxPooling2D(pool_size=(2,2)))
+            input1 = Input(shape=X.shape[1:])
+            m = Conv2D(layer_size, (3,3))(input1)
+            m = Activation("relu")(m)
+            m = MaxPooling2D(pool_size=(2,2))(m)
 
+            # Hidden layers
             for l in range(conv_layer-1):
-                # Second layer
-                model.add(Conv2D(layer_size, (3,3)))
-                model.add(Activation("relu"))
-                model.add(MaxPooling2D(pool_size=(2,2)))
-            # Third layer
-            model.add(Flatten())
-            for l in range(dense_layer):
-                model.add(Dense(layer_size))
-                model.add(Activation('relu'))
-                model.add(Dropout(0.2))
+                m = Conv2D(layer_size, (3,3))(m)
+                m = Activation("relu")(m)
+                m = MaxPooling2D(pool_size=(2,2))(m)
+            flatten1 = Flatten()(m)
 
-            model.add(Dense(4))
-            model.add(Activation('sigmoid'))
+            '''for l in range(dense_layer):
+                m = Dense(layer_size)(m)
+                m = Activation('relu')(m)
+                m = Dropout(0.2)(m)
 
-            model.compile(loss="binary_crossentropy",
-            optimizer="adam",
-            metrics=['accuracy'])
+            output1 = Dense(4,activation='sigmoid')(m)'''
 
 #----------------------------FIX--------------------------------------
 
             # Model for object processing
             # Inputs
-            model2.add(Conv2D(64,(3,3),input_shape = Y.shape[1:]))
-            model2.add(Activation("relu"))
-            model2.add(MaxPooling2D(pool_size=(2,2)))
+            input2 = Input(shape=Y.shape[1:])
+            x = Conv2D(32,(3,3),input_shape=Y.shape[1:])(input2)
+            x = Activation('relu')(x)
+            x = MaxPooling2D(pool_size=(2,2))(x)
 
-            model2.add(Conv2D(64,(3,3)))
-            model2.add(Activation("relu"))
-            model2.add(MaxPooling2D(pool_size=(2,2)))
-            model2.add(Conv2D(64,(3,3)))
-            model2.add(Activation("relu"))
-            model2.add(MaxPooling2D(pool_size=(2,2)))
-            model2.add(Flatten())
+            for i in range(2):
+                x = Conv2D(32,(3,3))(x)
+                x = Activation("relu")(x)
+                x = MaxPooling2D(pool_size=(2,2))(x)
+            flatten2 = Flatten()(x)
 
-            model2.add(Dense(64))
-            model2.add(Activation('relu'))
-            model2.add(Dropout(0.2))
+            '''x = Dense(32)(x)
+            x = Activation('relu')(x)
+            x = Dropout(0.2)(x)
 
-            model2.add(Dense(4))
-            model2.add(Activation('sigmoid'))
-
-            model2.compile(loss="binary_crossentropy",
-            optimizer="adam",
-            metrics=['accuracy'])
+            output2 = Dense(4,activation='sigmoid')(x)'''
 
             # Merging models
-            mergedOut = keras.layers.Add()([model.output,model2.output])
-            mergedOut = Flatten()(mergedOut)
-            mergedOut = Dense(64,activation='relu')(mergedOut)
-            mergedOut = Dense(64, activation='relu')(mergedOut)
+            #concatenated = concatenate([output1,output2])
+            concatenated = Concatenate()([flatten1, flatten2])
+            l = Dense(64+32)(concatenated)
+            l = Activation('relu')(l)
+            l = Dropout(0.2)(l)
+            output = Dense(4,activation='sigmoid')(l)
 
-            # Output layer
-            mergedOut = Dense(4,activation='softmax')(mergedOut)
+            merged_model = Model([input1, input2], output)
+            merged_model.compile(loss='binary_crossentropy',
+                    optimizer = 'adam',
+                    metrics=['accuracy'])
 
-            # Final merged model
-            mergedModel = keras.models.Model([model.input,model2.input],mergedOut)
-
-            mergedModel.compile(loss="binary_crossentropy",
-            optimizer="adam",
-            metrics=['accuracy'])
-
+            print(merged_model.summary())
             prev_time = time.time()
 
-            mergedModel.fit([X,Y],Z,batch_size=64,epochs=20,validation_split=0.1, callbacks=[tensorboard])
+            merged_model.fit([X,Y],Z, batch_size=64,epochs=20,validation_split=0.5,callbacks=[tensorboard])
             #model.fit(X,Y, batch_size=64,epochs=20, validation_split=0.1, callbacks=[tensorboard])
             print("Training took: {}".format(int(time.time() - prev_time)))
-            mergedModel.save("model/64x3x1-CNN.model")
+            merged_model.save("model/{}x{}x{}-CNN.model".format(layer_size, conv_layer, dense_layer))
 
 #model.save("model/{}x{}x{}-CNN.model".format(layer_size,conv_layer,dense_layer))
