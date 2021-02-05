@@ -35,6 +35,7 @@ For collecting data:
 ```bash
 py data_collection.py # then enter the number of actual session
 ```
+To end collecting data click on the image and press 'q'.
 
 For loading data to database:
 ```bash
@@ -50,3 +51,5 @@ And lastly for running trained model:
 ```bash
 py run_model.py
 ```
+If you want to pause the model just press 'o' and for playing press 'i'.
+For total stop press 'q'.
