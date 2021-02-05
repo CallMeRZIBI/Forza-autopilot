@@ -4,7 +4,7 @@ AI autopilot for Forza Horizon 4
 
 ## What it does?
 
-This autopilot drives as you learn it to drive, it's just a convolutional neural network so it probably won't avoid other vehicles... But! It's also detecting cars, but I didn't test it yet. ;)
+This autopilot drives as you learn it to drive, I've implemented car detection so that it can avoid them, but it's not working 100%. And for some reason this model is working way better without minimap than with it :DD.
 
 ## Requirements
 
