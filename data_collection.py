@@ -50,7 +50,7 @@ def create_paths(number):
         print("created directory")
 
 number_of_session = input("number of actual session: ")
-create_paths(int(number_of_session))
+create_paths(number_of_session)
 
 d = d3dshot.create()
 time.sleep(10)
@@ -62,5 +62,5 @@ while to_break == False:
 
     inputs.append(input_)
     outputs.append(output_)
-
-save_data(inputs,outputs, int(number_of_session))
+    time.sleep(1/50)
+save_data(inputs,outputs, number_of_session)

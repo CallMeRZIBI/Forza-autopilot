@@ -54,19 +54,19 @@ def draw_boxes(coords):
     return image
 
 def move(keys):
-    if keys[0] >= 0.8:
+    if keys[0] >= 0.7:
         PressKey(W)
     else:
         ReleaseKey(W)
-    if keys[1] >= 0.8:
+    if keys[1] >= 0.7:
         PressKey(A)
     else:
         ReleaseKey(A)
-    if keys[2] >= 0.8:
+    if keys[2] >= 0.7:
         PressKey(S)
     else:
         ReleaseKey(S)
-    if keys[3] >= 0.8:
+    if keys[3] >= 0.7:
         PressKey(D)
     else:
         ReleaseKey(D)

@@ -75,7 +75,7 @@ for dense_layer in dense_layers:
             print(merged_model.summary())
             prev_time = time.time()
 
-            merged_model.fit([X,Y],Z, batch_size=64,epochs=20,validation_split=0.5,callbacks=[tensorboard])
+            merged_model.fit([X,Y],Z, batch_size=64,epochs=20,validation_split=0.1,callbacks=[tensorboard])
             #model.fit(X,Y, batch_size=64,epochs=20, validation_split=0.1, callbacks=[tensorboard])
             print("Training took: {}".format(int(time.time() - prev_time)))
             merged_model.save("model/{}x{}x{}-CNN.model".format(layer_size, conv_layer, dense_layer))
