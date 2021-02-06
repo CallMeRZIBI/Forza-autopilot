@@ -38,7 +38,7 @@ py data_collection.py # then enter the number of actual session when you will be
 # To end collecting data click on the image and press 'q'.
 ```
 
-For loading data to database:
+For loading data to dataset:
 ```bash
 py load_data.py # this can take a while
 ```
