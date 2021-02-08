@@ -62,7 +62,13 @@ for dense_layer in dense_layers:
             # Merging models
             #concatenated = concatenate([output1,output2])
             concatenated = Concatenate()([flatten1, flatten2])
+
+            # trying 2 dense layers instead of one
             l = Dense(64+32)(concatenated)
+            l = Activation('relu')(l)
+            #l = Dropout(0.2)(l)
+
+            l = Dense(64+32)(l)
             l = Activation('relu')(l)
             l = Dropout(0.2)(l)
             output = Dense(4,activation='sigmoid')(l)
@@ -78,4 +84,4 @@ for dense_layer in dense_layers:
             merged_model.fit([X,Y],Z, batch_size=64,epochs=20,validation_split=0.1,callbacks=[tensorboard])
             #model.fit(X,Y, batch_size=64,epochs=20, validation_split=0.1, callbacks=[tensorboard])
             print("Training took: {}".format(int(time.time() - prev_time)))
-            merged_model.save("model/{}x{}x{}-CNN.model".format(layer_size, conv_layer, dense_layer))
+            merged_model.save("model/{}x{}x{}-CNN.model".format(layer_size, conv_layer, dense_layer+1))
