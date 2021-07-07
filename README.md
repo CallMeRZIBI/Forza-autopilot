@@ -8,7 +8,7 @@ This autopilot drives as you learn it to drive, I've implemented car detection s
 
 ## Requirements
 
- * Python 3
+ * Python 3.8
  * Tensorflow
  * Keras
  * NumPy
@@ -35,7 +35,7 @@ For collecting data:
 ```bash
 py data_collection.py # then enter the number of actual session when you will be promted
 
-# To end collecting data click on the image and press 'q'.
+# To end collecting data click on the image viewer and press 'q'.
 ```
 
 For loading data to dataset:
