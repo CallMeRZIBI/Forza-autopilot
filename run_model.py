@@ -71,8 +71,9 @@ def move(keys):
     else:
         ReleaseKey(D)
 
-model = tf.keras.models.load_model("model/64x3x1-CNN.model")
+model = tf.keras.models.load_model("model/64x3x2-CNN.model")
 d = d3dshot.create()
+d.display = d.displays[1]
 
 time.sleep(10)
 print('starting')

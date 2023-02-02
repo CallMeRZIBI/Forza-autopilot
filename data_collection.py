@@ -53,6 +53,7 @@ number_of_session = input("number of actual session: ")
 create_paths(number_of_session)
 
 d = d3dshot.create()
+d.display = d.displays[1] # display index to screenshot
 time.sleep(10)
 
 while to_break == False:

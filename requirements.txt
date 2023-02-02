@@ -1,0 +1,8 @@
+tensorflow==2.5.0
+numpy==1.19.5
+keras_nightly==2.5.0.dev2021032900
+opencv_python==4.5.2.54
+psutil==5.8.0
+keyboard==0.13.5
+d3dshot==0.1.5
+keras==2.4.3
